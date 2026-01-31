@@ -1,0 +1,42 @@
+#!/bin/bash
+# Toggle whisper-dictation with visual indicator
+# This script is called by the keyboard shortcut
+
+COOKIE="/tmp/whisper-dictation.cookie"
+INDICATOR_PID="/tmp/dictation-indicator.pid"
+
+# Default model (change this to your preference)
+MODEL="${WHISPER_MODEL:-base.en}"
+
+# Helper: kill all indicator processes
+kill_indicator() {
+    pkill -f "whisper-dictation-indicator" 2>/dev/null
+    pkill -f "dictation-indicator" 2>/dev/null
+    rm -f "$INDICATOR_PID"
+}
+
+if [ -f "$COOKIE" ]; then
+    # Recording in progress - switch to processing, then transcribe
+
+    # Signal indicator to show loading spinner
+    if [ -f "$INDICATOR_PID" ]; then
+        kill -USR1 "$(cat "$INDICATOR_PID")" 2>/dev/null
+    fi
+
+    # Stop recording and transcribe (this takes time)
+    whisper-dictation end
+
+    # Done - kill indicator
+    kill_indicator
+else
+    # Not recording - clean up any orphans first, then start fresh
+    kill_indicator
+    rm -f "$COOKIE"
+
+    # Start indicator and save its PID
+    whisper-dictation-indicator &
+    echo $! > "$INDICATOR_PID"
+
+    # Start recording
+    whisper-dictation begin --model "$MODEL" &
+fi
