@@ -1,7 +1,7 @@
 Source: whisper-dictation
 Section: sound
 Priority: optional
-Maintainer: Aung Myo Oo <aungmyooo2k17@gmail.com>
+Maintainer: Aung Myo Oo <dev.aungmyooo2015@gmail.com>
 Build-Depends: debhelper-compat (= 13), python3, dh-python
 Standards-Version: 4.6.0
 Homepage: https://github.com/aungmyooo2k17/whisper-dictation

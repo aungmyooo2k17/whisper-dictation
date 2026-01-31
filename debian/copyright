@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: whisper-dictation
-Upstream-Contact: Aung Myo Oo <aungmyooo2k17@gmail.com>
+Upstream-Contact: Aung Myo Oo <dev.aungmyooo2015@gmail.com>
 Source: https://github.com/aungmyooo2k17/whisper-dictation
 
 Files: *
