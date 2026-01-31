@@ -1,0 +1,41 @@
+#!/bin/bash
+# First-time setup for whisper-dictation
+# Creates virtual environment and installs faster-whisper
+
+set -e
+
+echo "Setting up whisper-dictation..."
+
+VENV_DIR="$HOME/.local/share/whisper-dictation/venv"
+ICONS_DIR="$HOME/.config/whisper-dictation/icons"
+
+# Create directories
+mkdir -p "$HOME/.local/share/whisper-dictation"
+mkdir -p "$ICONS_DIR"
+
+# Copy icons if they exist in system location
+if [ -d "/usr/share/whisper-dictation/icons" ]; then
+    cp /usr/share/whisper-dictation/icons/*.gif "$ICONS_DIR/" 2>/dev/null || true
+fi
+
+# Create virtual environment
+echo "Creating Python virtual environment..."
+python3 -m venv "$VENV_DIR"
+
+# Install faster-whisper
+echo "Installing faster-whisper (this may take a moment)..."
+source "$VENV_DIR/bin/activate"
+pip install --upgrade pip
+pip install faster-whisper
+
+echo ""
+echo "Setup complete!"
+echo ""
+echo "To set up keyboard shortcut (GNOME):"
+echo "  1. Open Settings → Keyboard → Custom Shortcuts"
+echo "  2. Add new shortcut:"
+echo "     Name: Whisper Dictation"
+echo "     Command: whisper-dictation-toggle"
+echo "     Shortcut: Ctrl+Shift+Space"
+echo ""
+echo "Or run: whisper-dictation-shortcut"

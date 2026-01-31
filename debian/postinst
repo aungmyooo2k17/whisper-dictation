@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+# Create virtual environment and install faster-whisper on first install
+if [ "$1" = "configure" ]; then
+    echo "Setting up whisper-dictation..."
+
+    # Create venv directory
+    mkdir -p /usr/share/whisper-dictation/venv
+
+    # Create venv and install faster-whisper (run as user later on first use)
+    echo ""
+    echo "=============================================="
+    echo "Whisper Dictation installed successfully!"
+    echo ""
+    echo "First-time setup (run as your user):"
+    echo "  whisper-dictation-setup"
+    echo ""
+    echo "Or manually:"
+    echo "  python3 -m venv ~/.local/share/whisper-dictation/venv"
+    echo "  source ~/.local/share/whisper-dictation/venv/bin/activate"
+    echo "  pip install faster-whisper"
+    echo ""
+    echo "Then set up keyboard shortcut:"
+    echo "  Settings → Keyboard → Custom Shortcuts"
+    echo "  Command: whisper-dictation-toggle"
+    echo "  Shortcut: Ctrl+Shift+Space"
+    echo "=============================================="
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	mkdir -p debian/whisper-dictation/usr/share/whisper-dictation
+	mkdir -p debian/whisper-dictation/usr/share/whisper-dictation/icons
+	mkdir -p debian/whisper-dictation/usr/bin
+
+	# Copy Python modules
+	cp whisper_dictation/*.py debian/whisper-dictation/usr/share/whisper-dictation/
+	cp whisper_dictation/icons/*.gif debian/whisper-dictation/usr/share/whisper-dictation/icons/
+
+	# Copy scripts
+	cp scripts/whisper-dictation-toggle debian/whisper-dictation/usr/bin/
+	cp scripts/whisper-dictation-setup debian/whisper-dictation/usr/bin/
+	cp scripts/whisper-dictation-shortcut debian/whisper-dictation/usr/bin/
+
+	# Create main wrapper
+	printf '#!/bin/bash\nVENV="$$HOME/.local/share/whisper-dictation/venv"\nif [ -d "$$VENV" ]; then\n  source "$$VENV/bin/activate"\nfi\nexec python3 /usr/share/whisper-dictation/dictation.py "$$@"\n' > debian/whisper-dictation/usr/bin/whisper-dictation
+
+	# Create indicator wrapper
+	printf '#!/bin/bash\nexec python3 /usr/share/whisper-dictation/indicator.py "$$@"\n' > debian/whisper-dictation/usr/bin/whisper-dictation-indicator
+
+	chmod +x debian/whisper-dictation/usr/bin/*
+
+override_dh_auto_test:

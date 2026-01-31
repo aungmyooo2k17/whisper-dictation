@@ -1,0 +1,9 @@
+whisper-dictation (1.0.0-1) jammy; urgency=medium
+
+  * Initial release
+  * Speech-to-text dictation using faster-whisper
+  * Visual indicator with recording/processing states
+  * GPU acceleration support
+  * Keyboard shortcut toggle
+
+ -- Aung Myo Oo <aungmyooo2k17@gmail.com>  Fri, 31 Jan 2026 23:00:00 +0630

@@ -1,0 +1,33 @@
+Source: whisper-dictation
+Section: sound
+Priority: optional
+Maintainer: Aung Myo Oo <aungmyooo2k17@gmail.com>
+Build-Depends: debhelper-compat (= 13), python3, dh-python
+Standards-Version: 4.6.0
+Homepage: https://github.com/aungmyooo2k17/whisper-dictation
+Vcs-Browser: https://github.com/aungmyooo2k17/whisper-dictation
+Vcs-Git: https://github.com/aungmyooo2k17/whisper-dictation.git
+Rules-Requires-Root: no
+
+Package: whisper-dictation
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends},
+ python3,
+ python3-pip,
+ python3-venv,
+ python3-gi,
+ gir1.2-gtk-3.0,
+ pulseaudio-utils,
+ xdotool
+Description: Speech-to-text dictation for Linux using OpenAI Whisper
+ Whisper Dictation is a speech-to-text dictation tool for Linux that uses
+ OpenAI's Whisper model via faster-whisper for accurate offline transcription.
+ .
+ Features:
+  - Offline transcription using OpenAI Whisper models
+  - Visual indicator showing recording/processing states
+  - GPU acceleration support (NVIDIA CUDA)
+  - Simple keyboard shortcut to toggle recording
+ .
+ Press a keyboard shortcut to start recording, press again to transcribe
+ and type the text at your cursor position. Works in any application.
