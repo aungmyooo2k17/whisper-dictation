@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "whisper-dictation"
-version = "1.0.0"
+version = "2.0.0"
 description = "Speech-to-text dictation for Linux using OpenAI Whisper"
 readme = "README.md"
 license = {text = "MIT"}
@@ -35,6 +35,14 @@ gpu = [
     "nvidia-cublas-cu12",
     "nvidia-cudnn-cu12",
 ]
+wakeword = [
+    "openwakeword>=0.6.0",
+    "pyaudio>=0.2.14",
+    "numpy",
+]
+compat = [
+    "tomli>=2.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/aungmyooo2k17/whisper-dictation"
@@ -44,9 +52,10 @@ Issues = "https://github.com/aungmyooo2k17/whisper-dictation/issues"
 [project.scripts]
 whisper-dictation = "whisper_dictation.dictation:main"
 whisper-dictation-indicator = "whisper_dictation.indicator:main"
+whisper-dictation-tray = "whisper_dictation.tray:main"
 
 [tool.setuptools.packages.find]
 include = ["whisper_dictation*"]
 
 [tool.setuptools.package-data]
-whisper_dictation = ["icons/*.gif"]
+whisper_dictation = ["icons/*.gif", "icons/*.svg"]

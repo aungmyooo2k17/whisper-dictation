@@ -1,16 +1,32 @@
 #!/bin/bash
 # Toggle whisper-dictation with visual indicator
+# Supports both floating indicator and system tray modes
 
 COOKIE="/tmp/whisper-dictation.cookie"
 INDICATOR_PID="/tmp/dictation-indicator.pid"
+TRAY_PID="/tmp/dictation-tray.pid"
 
 # Default model (change this or set WHISPER_MODEL env var)
 MODEL="${WHISPER_MODEL:-base.en}"
+
+# Config file override
+CONFIG_FLAG=""
+if [ -n "$WHISPER_CONFIG" ]; then
+    CONFIG_FLAG="--config $WHISPER_CONFIG"
+fi
 
 # Helper: kill all indicator processes
 kill_indicator() {
     pkill -f "whisper-dictation-indicator" 2>/dev/null
     rm -f "$INDICATOR_PID"
+}
+
+# Helper: signal tray indicator
+signal_tray() {
+    local sig="$1"
+    if [ -f "$TRAY_PID" ]; then
+        kill -"$sig" "$(cat "$TRAY_PID")" 2>/dev/null
+    fi
 }
 
 if [ -f "$COOKIE" ]; then
@@ -21,20 +37,32 @@ if [ -f "$COOKIE" ]; then
         kill -USR1 "$(cat "$INDICATOR_PID")" 2>/dev/null
     fi
 
-    # Stop recording and transcribe
-    whisper-dictation end
+    # Signal tray: processing state
+    signal_tray USR2
 
-    # Done - kill indicator
+    # Stop recording and transcribe
+    whisper-dictation end $CONFIG_FLAG
+
+    # Done - kill floating indicator (tray stays)
     kill_indicator
+
+    # Signal tray: back to idle (after a short delay for the processing state to show)
+    (sleep 2 && signal_tray USR1) &
 else
     # Not recording - clean up any orphans first, then start fresh
     kill_indicator
     rm -f "$COOKIE"
 
-    # Start indicator and save its PID
-    whisper-dictation-indicator &
-    echo $! > "$INDICATOR_PID"
+    # Check if tray is running; if not, use floating indicator
+    if [ ! -f "$TRAY_PID" ] || ! kill -0 "$(cat "$TRAY_PID")" 2>/dev/null; then
+        # Start floating indicator and save its PID
+        whisper-dictation-indicator &
+        echo $! > "$INDICATOR_PID"
+    fi
+
+    # Signal tray: recording state
+    signal_tray USR1
 
     # Start recording
-    whisper-dictation begin --model "$MODEL" &
+    whisper-dictation begin --model "$MODEL" $CONFIG_FLAG &
 fi
